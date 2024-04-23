@@ -315,7 +315,7 @@
                     <option value="" disabled selected>
                       Choisissez Matiére
                     </option>
-                    <option value="mat" *ngFor="let mat of matieres">{{mat.nom}}</option>
+                    <option [value]="mat.nom" *ngFor="let mat of matieres">{{mat.nom}}</option>
                   </select>
                   <div class="invalid-feedback">Ce champs est obligatoire</div>
                 </div>

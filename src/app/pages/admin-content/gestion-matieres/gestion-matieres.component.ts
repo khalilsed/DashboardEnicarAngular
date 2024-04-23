@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GestionEnseignantService } from 'src/app/services/gestion-enseignant.service';
 import { GestionMatieresService } from 'src/app/services/gestion-matieres.service';
 import Swal from 'sweetalert2';
 
@@ -18,10 +19,15 @@ export class GestionMatieresComponent implements OnInit {
   currentItem: any;
   public focus;
   matieres:any;
+  enseignants:any=[];
   matiereEn:any;
-  constructor(private modalService: NgbModal,private gestionMatieresService:GestionMatieresService) { }
+  matiereEnsei:any;
+  constructor(private modalService: NgbModal,private gestionMatieresService:GestionMatieresService, private gestionEnseignantService:GestionEnseignantService ) { }
 
   async ngOnInit(){
+    await this.gestionEnseignantService.getAllUsers().toPromise().then((data)=>{
+      this.enseignants=data;}
+      )
     await this.gestionMatieresService.getAllMatieres().toPromise().then(results=>{
       this.matieres=results;
       if(this.matieres.length<=5){
@@ -36,6 +42,7 @@ export class GestionMatieresComponent implements OnInit {
       this.currentItem = 0;
       this.taille = this.pageItems.length;
     })
+   
   }
   openAjout(content, type, modalDimension) {
   
@@ -62,6 +69,11 @@ export class GestionMatieresComponent implements OnInit {
 
   }
   openEns(content, type, modalDimension,matiere) {
+    this.gestionMatieresService.getEnseiMat(matiere.id).subscribe(res =>{
+      this.matiereEnsei=res;
+      console.log(this.matiereEnsei,'kkkkkkkk');
+      
+    })
     this.matiereEn=matiere;
     if (modalDimension === 'lg' && type === 'modal_mini') {
       this.modalService.open(content, { backdrop: false, windowClass: 'modal-mini', size: 'lg', centered: true },).result.then((result) => {
@@ -88,7 +100,7 @@ export class GestionMatieresComponent implements OnInit {
 
   openAjoutEnseig(content, type, modalDimension,matiere) {
     this.matiereEn=matiere;
-    console.log(this.matieres);
+    console.log(this.matiereEn,'yesssssssssssss');
     if (modalDimension === 'lg' && type === 'modal_mini') {
       this.modalService.open(content, { backdrop: false, windowClass: 'modal-mini', size: 'lg', centered: true },).result.then((result) => {
         this.closeResult = 'Closed with: $result';
@@ -146,16 +158,29 @@ export class GestionMatieresComponent implements OnInit {
     })
 
   }
+  
   addFormEnsToMat = new FormGroup({
-    nomMat: new FormControl('', Validators.required)
+    nomEns: new FormControl('', Validators.required)
   })
   get NomEns(){
     return this.addFormEnsToMat.get('nomEns');
   }
   add_EnsToMat(){
-    console.log(this.matiereEn.id)
-    let resp=this.gestionMatieresService.addEnsToMatiere(this.addFormEnsToMat.get("nomEns").value,this.matiereEn.id).subscribe();
+    // console.log(this.matiereEn.id)
+    let resp=this.gestionMatieresService.addEnsToMatiere(this.addFormEnsToMat.get("nomEns").value,this.matiereEn.id).subscribe(()=>{
+      this.successSwalAjoutEns();
+    });
     
+  }
+  successSwalAjoutEns() {
+    Swal.fire(
+      'Enseignant ajouté!',
+      '',
+      'success'
+    ).then(function () {
+      window.location.reload();
+    })
+
   }
 
 }

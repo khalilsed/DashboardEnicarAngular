@@ -49,7 +49,7 @@
                   <a
                     class="badge badge-danger"
                     (click)="
-                      openAjoutEnseig(classic3, 'modal_mini', 'lg', groupe)
+                      openAjoutEnseig(classic3, 'modal_mini', 'lg', matiere)
                     "
                     >Ajouter Enseignant</a
                   ><br />
@@ -215,6 +215,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #classic2 let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-body p-0">
@@ -235,17 +236,14 @@
               </thead>
 
               <tbody class="list">
-                <tr *ngFor="let enseignant of matiereEn.enseignants">
-                  <td>{{ enseignant.nom }} {{ enseignant.prenom }}</td>
-                  <td>{{ enseignant.mail }}</td>
+                <tr *ngFor="let ens of matiereEnsei">
+                  <td>{{ ens.nom }} {{ ens.prenom }}</td>
+                  <td>{{ ens.mail }}</td>
                 </tr>
               </tbody>
             </table>
             <br />
-            <div
-              style="font-size: 13px"
-              *ngIf="matiereEn.enseignants.length == 0"
-            >
+            <div style="font-size: 13px" *ngIf="matiereEnsei == NULL">
               *Aucun enseignant est affecté à cette matiére pour le moment
             </div>
           </div>
@@ -284,13 +282,13 @@
                     formControlName="nomEns"
                     class="form-control text-dark"
                     [ngClass]="
-                      nomEns.dirty && nomEns.errors ? 'is-invalid' : ''
+                      NomEns.dirty && NomEns.errors ? 'is-invalid' : ''
                     "
                   >
                     <option value="" disabled selected>
                       Choisissez Enseignant
                     </option>
-                    <option value="ens" *ngFor="let ens of enseignants">
+                    <option [value]="ens.nom" *ngFor="let ens of enseignants">
                       {{ ens.nom }} {{ ens.prenom }}
                     </option>
                   </select>

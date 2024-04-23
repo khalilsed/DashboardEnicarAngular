@@ -13,6 +13,9 @@ export class GestionMatieresService {
   public getAllMatieres() {
       return this.http.get("http://localhost:8080/enicar/gestionNotes/getAllMatieres");
   }
+  public getMatiereBynom(m : any) {
+    return this.http.get("http://localhost:8080/enicar/gestionNotes/getMatiere/"+m);
+}
   public removeMatiere(id:any) {
       this.http.delete("http://localhost:8080/enicar/gestionNotes/removeMatiere/"+id);
 
@@ -20,8 +23,11 @@ export class GestionMatieresService {
   public addMatiere(matiere:any) {
     return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiere",matiere);
   }
-  public addEnsToMatiere(matiere:any,idGrp:any) {
-    return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiereToGroupe/"+idGrp,matiere);
+  public getEnseiMat(id : any){
+    return this.http.get("http://localhost:8080/enicar/gestionNotes/getEnseignantByMatiere/"+id);
+  }
+  public addEnsToMatiere(enseignant:any,idMat:any) {
+    return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiereToEnseignant/"+idMat,enseignant);
   }
 
 }
