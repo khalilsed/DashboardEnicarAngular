@@ -22,6 +22,8 @@ export class ConsulterNotesComponent implements OnInit {
   notes: any = [];
   etudiant: any = [];
   matieres: any = [];
+  idMat:any;
+  nbAbsEtd:any;
   EtudiantsAbs: any = [];
   note: any = [];
   moyenne: any;
@@ -105,17 +107,13 @@ export class ConsulterNotesComponent implements OnInit {
       });
     }
     if (localStorage.getItem("userNat") == "local") {
-
-      // await this.gestionEnseignantService.getAllEtudiants(this.resultat.matiere,localStorage.getItem('grpId')).subscribe(
-      //   res=>{
-      //     this.EtudiantsAbs=res;
-      //     console.log(this.EtudiantsAbs,'EtudiantsAbsNew')
-      //   }
-      // )
-
+      
       await this.gestionEtudiantLocalService.getUsersWithNotes(this.userId).toPromise().then(data => {
         this.etudiant = data;
-        //console.log(this.etudiant)
+        // console.log(this.etudiant,'etudiantetudiant !')
+        this.idMat=this.etudiant[0].mat_matiere_id;
+        // console.log(this.idMat,'idMatidMat');
+        
         for (this.i = 0; this.i < this.etudiant.length; (this.i)++) {
             this.notes.push(this.etudiant[this.i].note_type+" : "+this.etudiant[this.i].vnote);
             let note = {
@@ -164,6 +162,20 @@ export class ConsulterNotesComponent implements OnInit {
 
           
       });
+      await this.gestionEnseignantService.getAllEtudiants(this.idMat,localStorage.getItem('grpId')).subscribe(
+        res=>{
+          this.EtudiantsAbs=res;
+          console.log(this.EtudiantsAbs,'EtudiantsAbsNew')
+          this.EtudiantsAbs.forEach(item =>{
+            if (item[2]==this.userId){
+              this.nbAbsEtd=item[5];
+              // console.log( this.nbAbsEtd);
+              
+            }
+          })
+          
+        }
+      )
     }
     
     

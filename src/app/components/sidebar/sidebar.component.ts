@@ -24,8 +24,8 @@ export const ENSEIGNANTROUTES: RouteInfo[] = [
   { path: 'prof/gestion-absences', title: 'Gestion absences',  icon: 'ni ni-books text-white', class: '' }
 ];
 export const ETUDIANTROUTES: RouteInfo[] = [
-  { path: 'etud/consulter-notes', title: 'Consulter mes notes', icon: 'ni ni-chart-bar-32 text-white', class: '' },
-  { path: 'etud/consulter-resultat', title: 'Consulter résultat', icon: 'ni ni-badge text-white', class: '' },
+  { path: 'etud/consulter-notes', title: 'Notes | Absences', icon: 'ni ni-chart-bar-32 text-white', class: '' },
+  { path: 'etud/consulter-resultat', title: 'Résultat', icon: 'ni ni-badge text-white', class: '' },
 
 ];
 

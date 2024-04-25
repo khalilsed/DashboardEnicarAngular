@@ -17,8 +17,8 @@ export class GestionEnseignantService {
   public removeUser(id:any) {
       return this.http.delete("http://localhost:8080/enicar/gestionNotes/removeEnseignant/"+id);
   }
-  public addUser(user:any) {
-    return this.http.post("http://localhost:8080/enicar/gestionNotes/addEnseignant",user);
+  public addUser(user: any, idG: any) {
+    return this.http.post("http://localhost:8080/enicar/gestionNotes/addEnseignant/"+ idG, user);
   }
   public getUserLogged(user:any){
     

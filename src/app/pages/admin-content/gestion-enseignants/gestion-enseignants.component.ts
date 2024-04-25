@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GestionEnseignantService } from 'src/app/services/gestion-enseignant.service';
+import { GestionGroupesService } from 'src/app/services/gestion-groupes.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,6 +16,7 @@ export class GestionEnseignantsComponent implements OnInit {
   taille: any;
   currentItem: any;
   endIndex = 5;
+  groupes:any;
   closeResult: string;
   enseignants: any;
   enseignant: any;
@@ -25,7 +27,7 @@ export class GestionEnseignantsComponent implements OnInit {
   public focus;
   
   
-  constructor(private modalService: NgbModal, private gestionEnseignantService: GestionEnseignantService) {
+  constructor(private modalService: NgbModal, private gestionEnseignantService: GestionEnseignantService,private gestionGroupesService:GestionGroupesService) {
  
 
   }
@@ -35,7 +37,8 @@ export class GestionEnseignantsComponent implements OnInit {
     nom: new FormControl('', Validators.required),
     prenom: new FormControl('', Validators.required),
     mail: new FormControl('', [Validators.required, Validators.email]),
-    tel: new FormControl('',[ Validators.required,Validators.pattern('[259][0-9]{7}')])
+    tel: new FormControl('',[ Validators.required,Validators.pattern('[259][0-9]{7}')]),
+    groupe: new FormControl('', Validators.required)
   })
   updateFormEnseignant = new FormGroup({
     nom: new FormControl('', Validators.required),
@@ -44,6 +47,10 @@ export class GestionEnseignantsComponent implements OnInit {
     tel: new FormControl('',[ Validators.required,Validators.pattern('[259][0-9]{7}')])
   })
   openAjout(content, type, modalDimension) {
+    this.gestionGroupesService.getAllGroupes().subscribe(data=> {
+      this.groupes=data;
+      
+   })
     if (modalDimension === 'lg' && type === 'modal_mini') {
       this.modalService.open(content, { backdrop:false,windowClass: 'modal-mini', size: 'lg', centered: true },).result.then((result) => {
         this.closeResult = 'Closed with: $result';
@@ -185,10 +192,24 @@ export class GestionEnseignantsComponent implements OnInit {
   }
 
   add_enseignant() {
-      let resp = this.gestionEnseignantService.addUser(this.addFormEnseignant.value);
+    let ntEnseingant={
+      "mail":this.addFormEnseignant.get('mail').value,
+      "nom":this.addFormEnseignant.get('nom').value,
+      "prenom":this.addFormEnseignant.get('prenom').value,
+      "tel":this.addFormEnseignant.get('tel').value
+
+    }
+    console.log('====================================');
+    console.log(ntEnseingant);
+    console.log('====================================');
+      let resp = this.gestionEnseignantService.addUser(this.addFormEnseignant.value,this.addFormEnseignant.get('groupe').value);
+      console.log('====================================');
+      console.log(resp);
+      console.log('====================================');
       resp.subscribe((data) =>
         this.successSwalAjout());
   }
+
 
   successSwalAjout() {
         Swal.fire(
