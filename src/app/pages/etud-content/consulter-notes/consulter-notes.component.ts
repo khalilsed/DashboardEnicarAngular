@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GestionEnseignantService } from 'src/app/services/gestion-enseignant.service';
 import { GestionEtudiantEtrangerService } from 'src/app/services/gestion-etudiant-etranger.service';
 import { GestionEtudiantLocalService } from 'src/app/services/gestion-etudiant-local.service';
 import { GestionResultatsService } from 'src/app/services/gestion-resultats.service';
@@ -19,10 +20,17 @@ export class ConsulterNotesComponent implements OnInit {
   public focus;
   username: any;
   notes: any = [];
+  etudiant: any = [];
   matieres: any = [];
+  EtudiantsAbs: any = [];
+  note: any = [];
+  moyenne: any;
+  resultat : any;
+  i : any;
   moys: any = [];
-  constructor(private gestionEtudiantLocalService: GestionEtudiantLocalService, private gestionResutatsService: GestionResultatsService, private gestionEtudiantEtrangerService: GestionEtudiantEtrangerService) {
+  constructor(private gestionEtudiantLocalService: GestionEtudiantLocalService, private gestionResutatsService: GestionResultatsService, private gestionEtudiantEtrangerService: GestionEtudiantEtrangerService, private gestionEnseignantService : GestionEnseignantService) {
     this.username = localStorage.getItem('userName');
+    this.userId = localStorage.getItem('userId');
   }
 
   async ngOnInit() {
@@ -30,6 +38,9 @@ export class ConsulterNotesComponent implements OnInit {
     let j = 0;
     let k = 0;
     let test = false;
+
+
+
     if (localStorage.getItem("userNat") == "etranger") {
       await this.gestionEtudiantEtrangerService.getUser(this.username).toPromise().then(data => {
         this.notes = data['notes'];
@@ -94,83 +105,101 @@ export class ConsulterNotesComponent implements OnInit {
       });
     }
     if (localStorage.getItem("userNat") == "local") {
-      await this.gestionEtudiantLocalService.getUser(this.username).toPromise().then(data => {
-        this.notes = data['notes'];
-        let matiere =
-        {
-          "matiere": this.notes[0].mat.nom,
-          "notes": [],
-          "coef": this.notes[0].mat.coef,
-          "moy": "",
 
-        }
-        this.matieres.push(matiere);
-        for (k = 1; k < this.notes.length; k++) {
-          for (j = 0; j < this.matieres.length; j++) {
-            if (this.notes[k].mat.nom == this.matieres[j].matiere) {
-              test = true;
+      // await this.gestionEnseignantService.getAllEtudiants(this.resultat.matiere,localStorage.getItem('grpId')).subscribe(
+      //   res=>{
+      //     this.EtudiantsAbs=res;
+      //     console.log(this.EtudiantsAbs,'EtudiantsAbsNew')
+      //   }
+      // )
+
+      await this.gestionEtudiantLocalService.getUsersWithNotes(this.userId).toPromise().then(data => {
+        this.etudiant = data;
+        //console.log(this.etudiant)
+        for (this.i = 0; this.i < this.etudiant.length; (this.i)++) {
+            this.notes.push(this.etudiant[this.i].note_type+" : "+this.etudiant[this.i].vnote);
+            let note = {
+              "vnote": this.notes[i].vnote,
+              "type": this.notes[i].type
+            }
+            if (this.notes[i].type == "cc") {
+              let n;
+              let pos=this.matieres[j].notes.find((n)=>n.type=="tp");
+              if(pos==undefined){
+                pos=0;
+              }
+              this.matieres[j].notes.splice(pos, 0, note);
+            }
+            if (this.notes[i].type == "tp") {
+              let pos=this.matieres[j].notes.find((n)=>n.type=="examen");
+              
+              if(pos==undefined){
+                pos=1;
+              }
+              console.log(pos);
+              this.matieres[j].notes.splice(pos, 0, note);
+            }
+            if (this.notes[i].type == "examen") {
+              this.matieres[j].notes.splice(2, 0, note);
             }
           }
-          if (!test) {
+          this.resultat = this.insererNotes(this.etudiant);
+          console.log(this.resultat)
+          console.log(this.resultat[0].notes[0].vnote);
+
+          for (j = 0; j < this.resultat.length; j++) {
+            this.moyenne = this.calculMoy(this.resultat[j].notes);
             let matiere =
-            {
-              "matiere": this.notes[k].mat.nom,
-              "coef": this.notes[k].mat.coef,
-              "moy": "",
-              "notes": []
-            }
-            this.matieres.push(matiere);
-          }
-        }
-        console.log(this.matieres);
-        for (i = 0; i < this.notes.length; i++) {
-          for (j = 0; j < this.matieres.length; j++) {
-            if (this.notes[i].mat.nom == this.matieres[j].matiere) {
-              let note = {
-                "vnote": this.notes[i].vnote,
-                "type": this.notes[i].type
-              }
-              if (this.notes[i].type == "cc") {
-                this.matieres[j].notes.splice(0, 0, note);
-              }
-              if (this.notes[i].type == "tp") {
-                this.matieres[j].notes.splice(1, 0, note);
-              }
-              if (this.notes[i].type == "examen") {
-                this.matieres[j].notes.splice(2, 0, note);
-              }
+          {
+            "data": this.resultat[j],
+            "moy": this.moyenne,
 
-            }
           }
-        }
+          
+          this.matieres.push(matiere);
+          console.log(this.matieres)
+          }
+          this.gestionResutatsService.moyMatieres = this.matieres;
+          console.log(this.moyenne)
+
+          
       });
     }
-    for (i = 0; i < this.matieres.length; i++) {
-      if (!this.verifCc(this.matieres[i].notes)) {
-        let note = {
-          "vnote": "_",
-          "type": "cc"
-        }
-        this.matieres[i].notes.splice(0, 0, note);
-      }
-      if (!this.verifTp(this.matieres[i].notes)) {
-        let note = {
-          "vnote": "_",
-          "type": "tp"
-        }
-        this.matieres[i].notes.splice(1, 0, note);
-      }
-      if (!this.verifExamen(this.matieres[i].notes)) {
-        let note = {
-          "vnote": "_",
-          "type": "examen"
-        }
-        this.matieres[i].notes.splice(2, 0, note);
-      }
+    
+    
     }
-    for (j = 0; j < this.matieres.length; j++) {
-      this.matieres[j].moy = this.calculMoy(this.matieres[j]);
-    }
+
+   insererNotes(matieresNotes) {
+      let result = [];
+  
+      // Parcourir les données pour regrouper les notes par matière
+      matieresNotes.forEach(item => {
+          // Vérifier si la matière existe déjà dans le résultat
+          let existingMatiere = result.find(matiere => matiere.matiere === item.matiere_nom);
+  
+          // Si la matière n'existe pas encore, la créer avec une liste vide de notes
+          if (!existingMatiere) {
+              existingMatiere = {
+                  matiere: item.matiere_nom,
+                  coef: item.matiere_coef,
+                  notes: []
+              };
+              result.push(existingMatiere);
+          }
+  
+          // Ajouter la note à la liste des notes de la matière
+          existingMatiere.notes.push({
+              type: item.note_type,
+              vnote: item.vnote
+          });
+      });
+  
+      return result;
+  }
+
+    
+    
+    /*
     if(this.matieres.length<=5){
       this.pageItems= new Array(0);
     }
@@ -190,7 +219,8 @@ export class ConsulterNotesComponent implements OnInit {
     this.endIndex = this.startIndex + 5;
 
 
-  }
+  }*/
+  
   verifCc(v: any) {
     let i = 0;
     for (i; i < v.length; i++) {
@@ -219,20 +249,21 @@ export class ConsulterNotesComponent implements OnInit {
     return false;
   }
   
+  
   calculMoy(m: any) {
     let i = 0;
     let moy = 0
     let coef = 0;
     let n;
-    for (i; i < m.notes.length; i++) {
-      if (m.notes[i].vnote == "_") {
+    for (i; i < m.length; i++) {
+      if (m[i].vnote == "_") {
         n = 0;
       } else {
-        n = m.notes[i].vnote;
+        n = m[i].vnote;
       }
-      if (m.notes[i].type == "tp") {
+      if (m[i].type == "tp") {
         coef = 0.2;
-      } else if (m.notes[i].type == "cc") {
+      } else if (m[i].type == "cc") {
         coef = 0.3;
       } else {
         coef = 0.5;
@@ -243,8 +274,13 @@ export class ConsulterNotesComponent implements OnInit {
 
     }
 
-    return moy;
+    return moy-1;
   }
+
+
+  
+  
   
 
 }
+

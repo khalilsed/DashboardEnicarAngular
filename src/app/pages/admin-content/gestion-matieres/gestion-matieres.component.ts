@@ -22,6 +22,8 @@ export class GestionMatieresComponent implements OnInit {
   enseignants:any=[];
   matiereEn:any;
   matiereEnsei:any;
+  closeImage= "assets/img/icons/common/close.png";
+
   constructor(private modalService: NgbModal,private gestionMatieresService:GestionMatieresService, private gestionEnseignantService:GestionEnseignantService ) { }
 
   async ngOnInit(){
@@ -157,6 +159,10 @@ export class GestionMatieresComponent implements OnInit {
       window.location.reload();
     })
 
+  }
+
+  annuler() {
+    window.location.reload();
   }
   
   addFormEnsToMat = new FormGroup({

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class GestionResultatsService {
   constructor(private http: HttpClient) { }
-  moyMatieres: any;
+  moyMatieres: any[];
   public updateResultat(resultat:any) {
       this.http.put("http://localhost:8080/enicar/gestionNotesupdateResultat/",resultat)
   }

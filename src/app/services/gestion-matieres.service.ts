@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,6 @@ export class GestionMatieresService {
   public getAllMatieres() {
       return this.http.get("http://localhost:8080/enicar/gestionNotes/getAllMatieres");
   }
-  public getMatiereBynom(m : any) {
-    return this.http.get("http://localhost:8080/enicar/gestionNotes/getMatiere/"+m);
-}
   public removeMatiere(id:any) {
       this.http.delete("http://localhost:8080/enicar/gestionNotes/removeMatiere/"+id);
 
@@ -23,11 +21,22 @@ export class GestionMatieresService {
   public addMatiere(matiere:any) {
     return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiere",matiere);
   }
+
   public getEnseiMat(id : any){
     return this.http.get("http://localhost:8080/enicar/gestionNotes/getEnseignantByMatiere/"+id);
+  }
+
+  public getMatByNom(nom:any) {
+    return this.http.get("http://localhost:8080/enicar/gestionNotes/getMatiereByName/"+nom);
+  }
+  getCountmatieres(): Observable<number> {
+    return this.http.get<number>(" http://localhost:8080/enicar/gestionNotes/matieres/count");
   }
   public addEnsToMatiere(enseignant:any,idMat:any) {
     return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiereToEnseignant/"+idMat,enseignant);
   }
+
+
+
 
 }

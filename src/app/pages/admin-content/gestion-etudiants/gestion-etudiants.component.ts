@@ -27,8 +27,13 @@ export class GestionEtudiantsComponent implements OnInit {
   id: any;
   etType: any;
   search: String;
+  closeImage= "assets/img/icons/common/close.png";
   public focus;
   groupes: any;
+  etudiants: any[];
+  tabgroupes: any[];
+  
+ 
   constructor(private modalService: NgbModal, private gestionGroupesService: GestionGroupesService, private gestionEtudiantLocalService: GestionEtudiantLocalService, private gestionEtudiantEtrangerService: GestionEtudiantEtrangerService) {
 
 
@@ -107,6 +112,8 @@ export class GestionEtudiantsComponent implements OnInit {
     }
 
   }
+
+
   confirmSwal(id, type) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -221,6 +228,11 @@ export class GestionEtudiantsComponent implements OnInit {
         this.successSwalAjout());
     }
   }
+  
+  annuler() {
+    window.location.reload();
+  }
+
   successSwalAjout() {
     Swal.fire(
       'Cet etudiant est ajouté!',
@@ -261,6 +273,10 @@ export class GestionEtudiantsComponent implements OnInit {
       this.groupes = data;
 
     })
+    this.gestionEtudiantLocalService.getAllEtudiants().subscribe(data => {
+      this.etudiants = data;
+
+    });
     this.dispLo = true;
     this.dispEt = false;
     this.gestionEtudiantEtrangerService.getAllUsers().subscribe(results => {

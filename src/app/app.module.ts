@@ -22,6 +22,8 @@ import { FiterEtudiantsPipe } from './filters/fiter-etudiants.pipe';
 import { AttribuerNoteComponent } from './pages/prof-content/attribuer-note/attribuer-note.component';
 import { GestionGroupesComponent } from './pages/admin-content/gestion-groupes/gestion-groupes.component';
 import { GestionMatieresComponent } from './pages/admin-content/gestion-matieres/gestion-matieres.component';
+import { GestionAbsencesComponent } from './pages/prof-content/gestion-absences/gestion-absences.component';
+import { AttribuerAbsenceComponent } from './pages/prof-content/attribuer-absence/attribuer-absence.component';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { GestionMatieresComponent } from './pages/admin-content/gestion-matieres
     FiterEtudiantsPipe,
     AttribuerNoteComponent,
     GestionGroupesComponent,
-    GestionMatieresComponent    
+    GestionMatieresComponent,
+    GestionAbsencesComponent,
+    AttribuerAbsenceComponent   
   ],
   imports: [
     ComponentsModule,

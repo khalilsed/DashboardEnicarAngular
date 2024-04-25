@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('userRole', "enseignant");
           localStorage.setItem('userId', this.user.id);
           localStorage.setItem('userNom', this.user.prenom +' '+ this.user.nom);
+          localStorage.setItem('ensMatId', this.user.mat.id);
           this._router.navigate(['/prof/attribuer-note']);
           }
         }, error => {
@@ -63,13 +64,18 @@ export class LoginComponent implements OnInit {
         let respEtudLoc = this.gestionEtudiantLocalService.getUserLogged(this.loginForm.get('username').value,this.loginForm.get('password').value);
         respEtudLoc.subscribe(data => {
             this.user = data; 
+           // console.log(this.user[0].user_id)
+            console.log(this.user,'user connected !')
             if(this.user!=null){
             localStorage.setItem('userNat', "local");
             localStorage.setItem('userRole', "etudiant");
-            localStorage.setItem('userId', this.user.id);
-            localStorage.setItem('userMail',this.user.mail);
-            localStorage.setItem('userNom', this.user.prenom +' '+ this.user.nom);
-            localStorage.setItem('userName', this.user.username);
+            localStorage.setItem('userId', this.user[0].user_id);
+            localStorage.setItem('grpId', this.user[0].grp_groupe_id);
+
+            //console.log(this.user.user_id)
+            localStorage.setItem('userMail',this.user[0].user_mail);
+            localStorage.setItem('userNom', this.user[0].user_pre +' '+ this.user[0].user_nom);
+            localStorage.setItem('userName', this.user[0].user_name);
             this._router.navigate(['/etud/consulter-notes']);
           }
           }, error => {
@@ -83,6 +89,7 @@ export class LoginComponent implements OnInit {
             console.log(this.user);
             localStorage.setItem('userRole', "admin");
             localStorage.setItem('userId', this.user.id);
+            console.log(this.user.id)
             localStorage.setItem('userNom', this.user.prenom +' '+ this.user.nom);
             this._router.navigate(['/admin/dashboard']);
           }

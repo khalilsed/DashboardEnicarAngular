@@ -19,10 +19,10 @@ export class ConsulterResultatComponent implements OnInit {
   ngOnInit(): void {
   let moy=0;
   let coefTotal=0;
+  console.log(this.gestionResultatsService.moyMatieres[0])
   for(let i=0;i<this.gestionResultatsService.moyMatieres.length;i++){
-    console.log(this.gestionResultatsService.moyMatieres[i].moy)
-      moy+=this.gestionResultatsService.moyMatieres[i].moy*this.gestionResultatsService.moyMatieres[i].coef;
-      coefTotal+=this.gestionResultatsService.moyMatieres[i].coef;
+      moy+=this.gestionResultatsService.moyMatieres[i].moy*this.gestionResultatsService.moyMatieres[i].data.coef;
+      coefTotal+=this.gestionResultatsService.moyMatieres[i].data.coef;
   }
   this.moyG=moy/coefTotal;
   if(this.moyG>=10){
@@ -34,7 +34,7 @@ export class ConsulterResultatComponent implements OnInit {
     "moy":this.moyG,
     "dec":this.dec,
     "etd":{
-          "id":localStorage.getItem("idUser")
+          "id":localStorage.getItem("userId")
     }
   }
   this.gestionResultatsService.addResultat(res).subscribe(data=>{

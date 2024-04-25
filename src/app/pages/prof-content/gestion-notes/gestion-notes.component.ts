@@ -20,6 +20,7 @@ export class GestionNotesComponent implements OnInit {
   userId: any;
   groupes: any;
   etudiants: any = [];
+  grpEtudiants: any = [];
   test: any = [];
   i: any;
   j: any;
@@ -37,17 +38,26 @@ export class GestionNotesComponent implements OnInit {
   async ngOnInit() {
     await this.gestionEnseignantService.getUser(this.userId).toPromise().then(data => {
       this.groupes = data['groupes'];
+      console.log(this.groupes)
       this.matEns=data['mat'];
     })
-    await this.gestionEtudiantLocalService.getAllUsers().toPromise().then(data => {
+    await this.gestionEnseignantService.getUser(this.userId).toPromise().then(data => {
+      this.groupes = data['groupes'];
+      this.matEns=data['mat'];
+    })
+    await this.gestionEtudiantLocalService.getAllUsersWithNotes(this.matEns.id).toPromise().then(data => {
       this.test = data;
+      console.log(this.test)
       for (this.i = 0; this.i < this.test.length; (this.i)++) {
         for (this.j = 0; this.j < this.groupes.length; (this.j)++) {
-          if (this.test[this.i]["grp"].id == this.groupes[this.j].id) {
+          if (this.test[this.i].grp_groupe_id == this.groupes[this.j].id) {
             this.etudiants.push(this.test[this.i]);
+            this.grpEtudiants.push(this.groupes[this.j].niveau+" "+this.groupes[this.j].nom+" "+this.groupes[this.j].spec.nom);
           }
         }
-      }
+        
+    }
+    //console.log(this.etudiants[1].note_id)
     })
     await this.gestionEtudiantEtrangerService.getAllUsers().toPromise().then(data => {
       this.test = data;
@@ -60,6 +70,7 @@ export class GestionNotesComponent implements OnInit {
       }
    
     })
+    console.log(this.etudiants.length)
     if(this.etudiants.length<=5){
       this.pageItems= new Array(0);
     }

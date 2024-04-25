@@ -20,6 +20,8 @@ export class GestionEnseignantsComponent implements OnInit {
   enseignant: any;
   currentEnseignantId: any;
   id: any;
+  
+  closeImage= "assets/img/icons/common/close.png";
   public focus;
   
   
@@ -96,6 +98,11 @@ export class GestionEnseignantsComponent implements OnInit {
     }
 
   }
+  
+  annuler() {
+    window.location.reload();
+  }
+
   confirmSwal(id) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {

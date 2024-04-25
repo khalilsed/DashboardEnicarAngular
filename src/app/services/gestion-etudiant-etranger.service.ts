@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,12 @@ export class GestionEtudiantEtrangerService {
   } 
   public getUser(username:any) {
     return this.http.get("http://localhost:8080/enicar/gestionNotes/getEtudiantEtranger?username="+username);
+  }
+  getCountEtudiantsEtranger(): Observable<number> {
+    return this.http.get<number>("http://localhost:8080/enicar/gestionNotes/etudiantsEtranger/count");
+  }
+  public getAbsEtudiant(idMatiere : any){
+    
+    return this.http.get(`http://localhost:8080/enicar/gestionNotes/nombre-absences/${idMatiere}`);
   }
 }

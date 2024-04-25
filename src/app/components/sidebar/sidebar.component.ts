@@ -11,15 +11,17 @@ declare interface RouteInfo {
 export const ADMINROUTES: RouteInfo[] = [
   { path: 'admin/dashboard', title: 'Dashboard', icon: 'ni ni-chart-bar-32 text-white', class: '' },
   { path: 'admin/gestion-enseignants', title: 'Gestion enseignants', icon: 'ni ni-badge text-white', class: '' },
-  { path: 'admin/gestion-etudiants', title: 'Gestion etudiants', icon: 'ni ni-books text-white', class: '' },
-  { path: 'admin/gestion-groupes', title: 'Gestion groupes', icon: 'ni ni-books text-white', class: '' },
+  { path: 'admin/gestion-etudiants', title: 'Gestion etudiants', icon: 'ni ni-single-02 text-white', class: '' },
+  { path: 'admin/gestion-groupes', title: 'Gestion groupes', icon: 'ni ni-bullet-list-67 text-white', class: '' },
   { path: 'admin/gestion-matieres', title: 'Gestion matieres', icon: 'ni ni-books text-white', class: '' },
 
 
 ];
 export const ENSEIGNANTROUTES: RouteInfo[] = [
   { path: 'prof/attribuer-note', title: 'Attribuer note', icon: 'ni ni-chart-bar-32 text-white', class: '' },
+  { path: 'prof/attribuer-absence', title: 'Attribuer absence', icon: 'ni ni-chart-bar-32 text-white', class: '' },
   { path: 'prof/gestion-notes', title: 'Gestion notes',  icon: 'ni ni-books text-white', class: '' },
+  { path: 'prof/gestion-absences', title: 'Gestion absences',  icon: 'ni ni-books text-white', class: '' }
 ];
 export const ETUDIANTROUTES: RouteInfo[] = [
   { path: 'etud/consulter-notes', title: 'Consulter mes notes', icon: 'ni ni-chart-bar-32 text-white', class: '' },
@@ -61,8 +63,4 @@ export class SidebarComponent implements OnInit {
       });
     }
   }
-  isActive(path: string): boolean {
-    return this.router.isActive(path, true);
-  }
-  
 }

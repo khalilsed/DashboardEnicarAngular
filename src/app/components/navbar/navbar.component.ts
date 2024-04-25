@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
   idClient: string;
   retrieveResonse: any;
   base64Data: any;
-  retrievedImage= "assets/img/logo.png";
+  retrievedImage= "assets/img/logo.jpeg";
   UserToken: any;
   nom: any;
   constructor(location: Location,  private element: ElementRef, private router: Router) {

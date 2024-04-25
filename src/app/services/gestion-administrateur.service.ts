@@ -24,5 +24,7 @@ export class GestionAdministrateurService {
     
     console.log(username+password+"service");
     return this.http.get("http://localhost:8080/enicar/gestionNotes/getAdminLogged?username="+username+"&password="+password);
-  } 
+  }
+  
+  
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +20,14 @@ export class GestionGroupesService {
   public addGroupe(groupe:any,id:any) {
     return this.http.post("http://localhost:8080/enicar/gestionNotes/addGroupe/"+id,groupe);
   }
-  public addMatToGroupe(matiere:any,idGrp:any) {
-    return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiereToGroupe/"+idGrp,matiere);
+  public addMatToGroupe(idGrp:any,nomMat:any) {
+    return this.http.post("http://localhost:8080/enicar/gestionNotes/addMatiereToGroupe/"+idGrp,nomMat);
   }
   public  getGroupe(id:any){
     return this.http.get("http://localhost:8080/enicar/gestionNotes/getGroupe?id="+id);
   } 
+
+  getCountgroupes(): Observable<number> {
+    return this.http.get<number>(" http://localhost:8080/enicar/gestionNotes/groupes/count");
+  }
 }

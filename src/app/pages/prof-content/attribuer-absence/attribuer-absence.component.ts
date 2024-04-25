@@ -9,11 +9,11 @@ import { GestionNotesService } from 'src/app/services/gestion-notes.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-attribuer-note',
-  templateUrl: './attribuer-note.component.html',
-  styleUrls: ['./attribuer-note.component.scss']
+  selector: 'app-attribuer-absence',
+  templateUrl: './attribuer-absence.component.html',
+  styleUrls: ['./attribuer-absence.component.scss']
 })
-export class AttribuerNoteComponent implements OnInit {
+export class AttribuerAbsenceComponent implements OnInit {
 
   name: any;
   @ViewChild("pv", {static: false}) fileUpload: ElementRef;files  = [];  
@@ -169,10 +169,9 @@ this.gestionNotesService.pushFileToStorage(this.currentFileUpload).subscribe(eve
     const formData = new FormData();
     formData.append('file', file);
     formData.append('nomMatiere',this.attribuerNoteForm.get('matiere').value);
-    formData.append('grpId',this.attribuerNoteForm.get('groupe').value)
     console.log(formData)
     // Perform the HTTP request
-    this.http.post('http://localhost:8080/enicar/gestionNotes/upload-etudiant-data', formData).subscribe((response) => {
+    this.http.post('http://localhost:8080/enicar/gestionNotes/upload-etudiant-data-absence', formData).subscribe((response) => {
     console.log('File uploaded successfully');
     },(error) => {
     console.error('Error uploading file:', error);
@@ -187,17 +186,11 @@ this.gestionNotesService.pushFileToStorage(this.currentFileUpload).subscribe(eve
     
     Swal.fire({
       icon: 'success',
-      title: 'la note est attribuée avec succés',
+      title: 'Les absences sont attribuées avec succés',
       text: ''
     }).then(function () {
       window.location.reload();
     })
   }
 
-
-  attribuerNote() {  
-    
 }
-
-}
-
